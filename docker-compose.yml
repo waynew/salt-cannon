@@ -1,0 +1,33 @@
+version: '3.7'
+
+
+services:
+  # If we're deploying to the real pypi, we don't need this
+  pypi:
+    build: pypi
+    image: devpi-server:latest
+## To avoid an ephemeral pypi, we should go ahead and enable this
+#    volumes:
+#      - ./data:/data
+    ports:
+      - 3141:3141
+    environment:
+      # This is obviously a rubbish password
+      - DEVPI_PASSWORD=asdf
+    restart: always
+    networks:
+      - blerp
+  builder:
+    build: builder
+    image: salt-builder:latest
+    container_name: salty-builder
+    networks:
+      - blerp
+    entrypoint:
+      - python3.7
+      - -m
+      - http.server
+
+
+networks:
+  blerp: {}
