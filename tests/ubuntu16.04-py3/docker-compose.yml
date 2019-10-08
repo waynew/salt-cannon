@@ -1,0 +1,30 @@
+version: '3.7'
+
+
+services:
+  minion:
+    build: minion
+    environment:
+      - TZ=Etc/UTC
+      - DEBIAN_FRONTEND=noninteractive
+    image: salt/cannon:ubuntu-16.04-py3-minon
+    networks:
+      - blerp
+    entrypoint:
+      - salt-minion
+    links:
+      - master:salt
+  master:
+    build: master
+    environment:
+      - TZ=Etc/UTC
+      - DEBIAN_FRONTEND=noninteractive
+    image: salt/cannon:ubuntu-16.04-py3-master
+    networks:
+      - blerp
+    entrypoint:
+      - salt-master
+
+
+networks:
+  blerp: {}
